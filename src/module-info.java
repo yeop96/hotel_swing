@@ -1,0 +1,2 @@
+module hotel_swing {
+}
