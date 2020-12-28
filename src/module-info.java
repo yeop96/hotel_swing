@@ -1,2 +1,0 @@
-module hotel_swing {
-}
