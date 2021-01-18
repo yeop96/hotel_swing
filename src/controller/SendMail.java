@@ -2,7 +2,7 @@ package controller;
 
 import java.util.Date;
 import java.util.Properties;
- 
+
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -41,7 +41,7 @@ public class SendMail {
             InternetAddress from = new InternetAddress() ;
              
              
-            from = new InternetAddress("BIT Hotel<todan13462@chatdays.com>");
+            from = new InternetAddress("Yeop Hotel<javamail713@gmail.com>");
              
             // 이메일 발신자
             msg.setFrom(from);
@@ -82,7 +82,7 @@ class MyAuthentication extends Authenticator {
  
     public MyAuthentication(){
          
-        String id = "todan13462@chatdays.com";       // 구글 ID
+    	String id = "javamail713@gmail.com";       // 구글 ID
         String pw = "1234java!";          // 구글 비밀번호
  
         // ID와 비밀번호를 입력한다.

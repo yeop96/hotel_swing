@@ -1,22 +1,23 @@
 package model;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.MemberDTO;
-import model.ReservationDTO;
-
 public class InformationDAO {
    private static InformationDAO instance;
-   private String driver = "oracle.jdbc.driver.OracleDriver";
-   private String url = "jdbc:oracle:thin:@localhost:1521:xe";
-   private String user = "system";
-   private String password = "oracle";
+//   private String driver = "com.mysql.cj.jdbc.Driver";
+//   private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
+//   private String user = "root";
+//   private String password = "0000";
+   
+   private String driver = "com.mysql.cj.jdbc.Driver";
+   private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
+   private String user = "root";
+   private String password = "0000"; 
 
    private Connection conn;
    private PreparedStatement pstmt;
@@ -27,7 +28,7 @@ public class InformationDAO {
          synchronized (InformationDAO.class) {
             instance = new InformationDAO();
          }
-      } // if
+      } 
       return instance;
    }// getInstance() -- Singleton
 
@@ -193,7 +194,7 @@ public class InformationDAO {
    public void deleteAccount(String loginId) {
       int su = 0;
       getConnection();
-      String sql = "delete member where ID=?";
+      String sql = "delete from member where ID=?";
       try {
          pstmt = conn.prepareStatement(sql);
          pstmt.setString(1, loginId);
@@ -202,7 +203,7 @@ public class InformationDAO {
       } catch (SQLException e) {
          e.printStackTrace();
       }
-      String sql2 = "delete reservation where f_id=?";
+      String sql2 = "delete from reservation where f_id=?";
       try {
          pstmt = conn.prepareStatement(sql2);
          pstmt.setString(1, loginId);
@@ -228,42 +229,6 @@ public class InformationDAO {
 
    }// deleteAccount()
 
-//   public void readReservationRec(String loginId) {// 캘린더에 예약 날짜 뿌리기
-//      int su = 0;
-//      String sql = "select * from reservation where f_id=?";
-//      this.getConnection();
-//      ReservationDTO rdto = null;
-//      try {
-//         pstmt = conn.prepareStatement(sql);
-//         pstmt.setString(1, loginId);
-//         rs = pstmt.executeQuery();
-//         while (rs.next()) {
-//            rdto = new ReservationDTO();
-//            rdto.setStartday(rs.getString("STARTDAY"));
-//            rdto.setEndday(rs.getString("ENDDAY"));
-//            rdto.setRoomNum(rs.getString("ROOMNUM"));
-//            rdto.setAdult(rs.getString("ADULT"));
-//            rdto.setChild(rs.getString("CHILD"));
-//            rdto.setPayway(rs.getString("PAYWAY"));
-//            rdto.setTotalpay(rs.getInt("TOTALPAY"));
-//
-//         } // while
-//      } catch (SQLException e) {
-//         e.printStackTrace();
-//      } finally {
-//         try {
-//            if (pstmt != null) {
-//               pstmt.close();
-//            }
-//            if (conn != null) {
-//               conn.close();
-//            }
-//         } catch (SQLException e) {
-//            e.printStackTrace();
-//         }
-//      }
-//
-//   }// readReservationRec()
 
    public ArrayList<ReservationDTO> sortReservationByRoomNum(String roomNum) {
       int su = 0;
@@ -279,7 +244,7 @@ public class InformationDAO {
             rdto = new ReservationDTO();
             rdto.setStartday(rs.getString("startday"));
             rdto.setEndday(rs.getString("endday"));
-            // rdto.setRoomNum(rs.getString("ROOMNUM"));
+       
 
             arrayList.add(rdto);
          } // while
@@ -304,7 +269,7 @@ public class InformationDAO {
    public void deleteReservationData(String loginId, String startDay) {
 	      int su = 0;
 	      getConnection();
-	      String sql2 = "delete reservation where f_id=? and startday = ?";
+	      String sql2 = "delete from reservation where f_id=? and startday = ?";
 	      try {
 	         pstmt = conn.prepareStatement(sql2);
 	         pstmt.setString(1, loginId);
@@ -332,4 +297,4 @@ public class InformationDAO {
    
    
    
-}// class
+}

@@ -1,27 +1,49 @@
 package view;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
-import model.MemberDAO;
+import controller.LoginController;
 import model.MemberDTO;
-import view.RoomChoice;
-import view.RoundedButton;
 
-public class LoginFrame extends JFrame implements ActionListener {
-	ImageIcon i = new ImageIcon("img/room.png");
-	Image im = i.getImage();
-	private RoundedButton loginB, memberB;
-	private RoundedButton searchID, searchPW;
-	private JLabel loginL, PasswordL;
-	private JTextField loginT;
-	private JPasswordField passwordT;
-	private ArrayList<MemberDTO> arrayList;
+public class LoginFrame extends JFrame  {
+	
+	Image im = Toolkit.getDefaultToolkit().createImage("img/back.jpg");//배경
+
+	public RoundedButton loginB, memberB;
+	public RoundedButton searchID, searchPW;
+	public JLabel loginL, PasswordL;
+	public JTextField loginT;
+	public JPasswordField passwordT;
+	public ArrayList<MemberDTO> arrayList;
+	LoginController loginController;
 
 	public LoginFrame() {
+		
+		loginController = new LoginController(this);
+		
+		ImageIcon img = new ImageIcon("img/hotel_logo.png");
+		this.setIconImage(img.getImage());
+		
+
+		ImageIcon icon = new ImageIcon("img/hotel_logo.png");
+		Image im = icon.getImage();
+		Image im2 = im.getScaledInstance(100, 100, Image.SCALE_DEFAULT);
+		ImageIcon icon2 = new ImageIcon(im2);
+		JLabel img3 = new JLabel(icon2);
+	
+
 		// 컴퍼넌트 생성
 		loginL = new JLabel("ID");
 		PasswordL = new JLabel("PW");
@@ -36,20 +58,21 @@ public class LoginFrame extends JFrame implements ActionListener {
 		loginT = new JTextField(10);
 		passwordT = new JPasswordField(10);
 
-		this.setTitle("Login");
+		this.setTitle("yeop96_호텔 ");
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		MyPanel panel = new MyPanel();
 		panel.setLayout(null);
-		loginL.setBounds(130, 305, 20, 10);
-		loginB.setBounds(80, 450, 115, 30);
-		memberB.setBounds(205, 450, 115, 30);
-		searchID.setBounds(80, 490, 115, 30);
-		searchPW.setBounds(205, 490, 115, 30);
-		loginL.setBounds(130, 305, 20, 10);
-		loginT.setBounds(160, 300, 100, 20);
-		PasswordL.setBounds(130, 335, 20, 10);
-		passwordT.setBounds(160, 330, 100, 20);
+		loginL.setBounds(170, 305, 20, 10);
+		loginB.setBounds(120, 450, 115, 30);
+		memberB.setBounds(245, 450, 115, 30);
+		searchID.setBounds(120, 490, 115, 30);
+		searchPW.setBounds(245, 490, 115, 30);
+		loginL.setBounds(170, 305, 20, 10);
+		loginT.setBounds(200, 300, 100, 20);
+		PasswordL.setBounds(170, 335, 20, 10);
+		passwordT.setBounds(200, 330, 100, 20);
+		img3.setBounds(200, 150,100,100);
 
 		Container c = getContentPane();
 		c.add(panel);
@@ -62,125 +85,27 @@ public class LoginFrame extends JFrame implements ActionListener {
 		panel.add(PasswordL);
 		panel.add(loginT);
 		panel.add(passwordT);
-
-		setSize(400, 600);
+		
+		panel.add(img3); // 로고
+		setResizable(false);
+		setSize(500, 800);
+		setLocationRelativeTo(null);
 		setVisible(true);
-		event();
-	}
-
-	public void event() {
-		loginB.addActionListener(this);
-		memberB.addActionListener(this);
-		searchID.addActionListener(this);
-		searchPW.addActionListener(this);
-		loginT.addActionListener(this);
-		passwordT.addActionListener(this);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == loginB || e.getSource() == passwordT || e.getSource() == loginT) {
-			String id = loginT.getText();
-			String pw = new String(passwordT.getPassword());
-
-			MemberDTO dto = new MemberDTO();
-
-			dto.setId(id);
-			dto.setPw(pw);
-
-			MemberDAO dao = MemberDAO.getInstance();
-			MemberDTO loginData = dao.login(dto);
-
-			String idC = loginData.getId();
-			String pwC = loginData.getPw();
-
-			if (id.length() == 0 || pw.length() == 0) {
-				JOptionPane.showMessageDialog(this, "아이디와 비밀번호를 입력해주세요");
-			} else if (id.equals(idC) && pw.equals(pwC)) {
-				JOptionPane.showMessageDialog(this, "로그인");
-				dto.setId(idC);
-				ArrayList<MemberDTO> arrayList = dao.loginInfo(dto);
-
-				for (MemberDTO data : arrayList) {
-					System.out.println(data.getId());
-					System.out.println(data.getPw());
-					System.out.println(data.getName());
-					System.out.println(data.getBirth());
-					System.out.println(data.getEmail());
-					System.out.println(data.getTel());
-					System.out.println(data.getAddress1());
-
-					//new RoomChoice(idC, data.getName(), data.getTel());
-					RoomChoice aa = new RoomChoice(idC, data.getName(), data.getTel());
-				}
-
-				// setVisible(false);
-				dispose();
-
-			} else {
-				JOptionPane.showMessageDialog(this, "아이디나 비밀번호가 틀렸습니다.");
-			}
-
-		} else if (e.getSource() == memberB) {
-			MemberJoin join = new MemberJoin();
-		} else if (e.getSource() == searchID) {
-			String email = JOptionPane.showInputDialog(this, "이메일을 입력하세요", null, JOptionPane.PLAIN_MESSAGE);
-			if (email != null) {
-				String tel = JOptionPane.showInputDialog(this, "휴대폰 번호를 입력하세요", null, JOptionPane.PLAIN_MESSAGE);
-				MemberDTO dto = new MemberDTO();
-				dto.setEmail(email);
-				dto.setTel(tel);
-
-				MemberDAO dao = MemberDAO.getInstance();
-				String id = null;
-				id = dao.getID(dto);
-				if (tel == null) {
-					JOptionPane.showMessageDialog(this, "정보가 입력 되지 않았습니다.");
-				} else if (id != null) {
-					JOptionPane.showMessageDialog(this, "아이디 : " + id);
-				} else if (id == null) {
-					JOptionPane.showMessageDialog(this, "정보가 일치하지 않습니다.");
-				}
-			} else {
-				JOptionPane.showMessageDialog(this, "정보가 입력 되지 않았습니다.");
-			}
-
-		} else if (e.getSource() == searchPW) {
-			String id = JOptionPane.showInputDialog(this, "아이디를 입력하세요", null, JOptionPane.PLAIN_MESSAGE);
-			if (id != null) {
-				String email = JOptionPane.showInputDialog(this, "이메일을 입력하세요", null, JOptionPane.PLAIN_MESSAGE);
-				if (email != null) {
-					String tel = JOptionPane.showInputDialog(this, "핸드폰 번호를 입력하세요", null, JOptionPane.PLAIN_MESSAGE);
-
-					MemberDTO dto = new MemberDTO();
-					dto.setId(id);
-					dto.setEmail(email);
-					dto.setTel(tel);
-
-					MemberDAO dao = MemberDAO.getInstance();
-					String pw = null;
-					pw = dao.getPW(dto);
-					if (tel == null) {
-						JOptionPane.showMessageDialog(this, "정보가 입력 되지 않았습니다.");
-					} else if (pw != null) {
-						JOptionPane.showMessageDialog(this, "패스워드 : " + pw);
-					} else if (pw == null) {
-						JOptionPane.showMessageDialog(this, "정보가 일치하지 않습니다.");
-					}
-				} else {
-					JOptionPane.showMessageDialog(this, "정보가 입력 되지 않았습니다.");
-				}
-			} else {
-				JOptionPane.showMessageDialog(this, "정보가 입력 되지 않았습니다.");
-			}
-		}
+		
+		loginB.addActionListener(loginController);
+		memberB.addActionListener(loginController);
+		searchID.addActionListener(loginController);
+		searchPW.addActionListener(loginController);
+		loginT.addActionListener(loginController);
+		passwordT.addActionListener(loginController);
+		
 	}
 
 	class MyPanel extends JPanel {
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
 			g.drawImage(im, 0, 0, getWidth(), getHeight(), this);
+
 		}
 	}
 

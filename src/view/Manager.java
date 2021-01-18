@@ -1,8 +1,9 @@
 package view;
 
-import java.awt.Color;
-
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -30,28 +31,53 @@ public class Manager extends JFrame implements ActionListener, ListSelectionList
    private JLabel room1L, room2L, room3L, room4L, room5L, room6L, room7L, room8L;
    private JButton btnRoom_1 ,btnRoom_2, btnRoom_3 ,btnRoom_4, btnRoom_5 , btnRoom_6, btnRoom_7 , btnRoom_8;
    private RoomInfo room;
+   private ImageIcon backImg;
    
    public static void main(String[] args) {
       new Manager().event();
-   }// main
+      //관리자 모드로 시작합니다.
+   }
 
    public Manager() {// 생성자 시작
-      setTitle("비트 호텔 매니저 v1.0");
+      setTitle("호텔 지배인");
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setBounds(100, 100, 1200, 550);
+      ImageIcon img = new ImageIcon("img/hotel_logo.png");
+      this.setIconImage(img.getImage());
 //base panel as content pane
-      JPanel basePanel = new JPanel();
+//      JPanel basePanel = new JPanel();
+//      basePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+//      basePanel.setLayout(null);
+      
+      //배경이미지 바꾸기
+      backImg = new ImageIcon("img/back.jpg");
+      //배경 Panel 생성후 컨텐츠페인으로 지정      
+      JPanel basePanel = new JPanel() {
+          public void paintComponent(Graphics g) {
+              // Approach 1: Dispaly image at at full size
+              g.drawImage(backImg.getImage(), 0, 0, null);
+              // Approach 2: Scale image to size of component
+               Dimension d = getSize();
+               g.drawImage(backImg.getImage(), 0, 0, d.width, d.height, null);
+              // Approach 3: Fix the image position in the scroll pane
+              // Point p = scrollPane.getViewport().getViewPosition();
+              // g.drawImage(icon.getImage(), p.x, p.y, null);
+              setOpaque(false); //그림을 표시하게 설정,투명하게 조절
+              super.paintComponent(g);
+          }
+      };
+      
       basePanel.setBorder(new EmptyBorder(5, 5, 5, 5));
       basePanel.setLayout(null);
 
 //JLabel
-      room1L = new JLabel("R201");
+      room1L = new JLabel("1호실");
       room1L.setBounds(130, 65, 60, 15);
-      room2L = new JLabel("R202");
+      room2L = new JLabel("2호실");
       room2L.setBounds(355, 65, 60, 15);
-      room3L = new JLabel("R203");
+      room3L = new JLabel("3호실");
       room3L.setBounds(575, 65, 60, 15);
-      room4L = new JLabel("R204");
+      room4L = new JLabel("4호실");
       room4L.setBounds(800, 65, 60, 15);
       room5L = new JLabel("5호실");
       room5L.setBounds(130, 272, 60, 15);
@@ -70,21 +96,48 @@ public class Manager extends JFrame implements ActionListener, ListSelectionList
       basePanel.add(room6L);
       basePanel.add(room7L);
       basePanel.add(room8L);
-//ImageIcon
-      ImageIcon room1Icon = new ImageIcon("picture/1_1.png");
-      ImageIcon room2Icon = new ImageIcon("picture/2_1.png");
-      ImageIcon room3Icon = new ImageIcon("picture/3_1.png");
-      ImageIcon room4Icon = new ImageIcon("picture/4_1.png");
-      ImageIcon room5Icon = new ImageIcon("picture/5_1.png");
-      ImageIcon room6Icon = new ImageIcon("picture/6_1.png");
-      ImageIcon room7Icon = new ImageIcon("picture/7_1.png");
-      ImageIcon room8Icon = new ImageIcon("picture/8_1.png");
+      
+      //ImageIcon
+      ImageIcon room1Icon = new ImageIcon("picture/1.jpg");
+      ImageIcon room2Icon = new ImageIcon("picture/2.jpg");
+      ImageIcon room3Icon = new ImageIcon("picture/3.jpg");
+      ImageIcon room4Icon = new ImageIcon("picture/4.jpg");
+      ImageIcon room5Icon = new ImageIcon("picture/5.jpg");
+      ImageIcon room6Icon = new ImageIcon("picture/6.jpg");
+      ImageIcon room7Icon = new ImageIcon("picture/7.jpg");
+      ImageIcon room8Icon = new ImageIcon("picture/8.jpg");
+    
+      //ImageIcon에서 Image를 추출
+      Image originImg1 = room1Icon.getImage();
+      Image originImg2 = room2Icon.getImage(); 
+      Image originImg3 = room3Icon.getImage(); 
+      Image originImg4 = room4Icon.getImage(); 
+      Image originImg5 = room5Icon.getImage(); 
+      Image originImg6 = room6Icon.getImage(); 
+      Image originImg7 = room7Icon.getImage(); 
+      Image originImg8 = room8Icon.getImage();
+      
+      //추출된 Image의 크기를 조절하여 새로운 Image객체 생성
+      Image changedImg1= originImg1.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+      Image changedImg2= originImg2.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+      Image changedImg3= originImg3.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+      Image changedImg4= originImg4.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+      Image changedImg5= originImg5.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+      Image changedImg6= originImg6.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+      Image changedImg7= originImg7.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+      Image changedImg8= originImg8.getScaledInstance(250, 200, Image.SCALE_SMOOTH );
+		
+      //새로운 Image로 ImageIcon객체를 생성
+      room1Icon = new ImageIcon(changedImg1);
+      room2Icon = new ImageIcon(changedImg2);
+      room3Icon = new ImageIcon(changedImg3);
+      room4Icon = new ImageIcon(changedImg4);
+      room5Icon = new ImageIcon(changedImg5);
+      room6Icon = new ImageIcon(changedImg6);
+      room7Icon = new ImageIcon(changedImg7);
+      room8Icon = new ImageIcon(changedImg8);
 
-//      imgBtn[i].setBorderPainted(false); // 외곽선 없애기
-//        imgBtn[i].setContentAreaFilled(false); // 내용영역 채우기 안함
-//        imgBtn[i].setFocusPainted(false); // 버튼 눌렀을때 생기는 테두리 사용안함
-//        imgBtn[i].setOpaque(false); // 투명하게
-//RoundedButton
+
       btnRoom_1 = new JButton("", room1Icon);
       btnRoom_1.setBounds(40, 90, 215, 125);
       btnRoom_1.setBorderPainted(false); // 외곽선 없애기
@@ -176,6 +229,8 @@ public class Manager extends JFrame implements ActionListener, ListSelectionList
       Container contentPane = this.getContentPane();
       contentPane.add(basePanel);
 
+      setLocationRelativeTo(null);
+      
       setVisible(true);
 
       System.out.println(model.getSize());
@@ -248,6 +303,9 @@ public class Manager extends JFrame implements ActionListener, ListSelectionList
       }
       
    }
+   
+
+  
 
    @Override
    public void valueChanged(ListSelectionEvent e) {
@@ -257,7 +315,7 @@ public class Manager extends JFrame implements ActionListener, ListSelectionList
       {
     	  return;
       }
-      //new ManagerChatClient(csLoginId).service();
+      new ManagerChatClient(csLoginId).managerChatClientController.service();
       dispose();
    }
-}// class
+}

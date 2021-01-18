@@ -1,83 +1,79 @@
 package view;
 
 import java.awt.Color;
-
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.AbstractBorder;
 import javax.swing.border.SoftBevelBorder;
 
-import view.Information;
+import controller.RoomChoiceController;
 import model.ReservationDAO;
 import model.ReservationDTO;
-import view.RoundedButton;
 
-public class RoomChoice extends JFrame implements ActionListener, Runnable
+public class RoomChoice extends JFrame 
 {
 	private static final long serialVersionUID = 1L;
 	public static final int NUMBER = 8;
-	private JButton[] imgBtn;
-	private JLabel[] room_NumL;
-	private JLabel[] priceL;
-	private JLabel[] reservationL;
-	private ImageIcon[] image;
-	private JComboBox<String> yearCB;
-	private JComboBox<String> monthCB;
-	private JComboBox<String> dayCB;
-	private RoundedButton memberInfo;
-	private RoundedButton chat;
-	private JLabel main;
-	private Socket socket;
-	private BufferedReader br;
-	private PrintWriter pw;
-	private String loginId;
-	private String name;
-	private String tel;
-	private ArrayList<String> yearList;
-	private ArrayList<String> monthList;
-	private ArrayList<String> dayList;
-	private String[] dayStr;
-	private String[] monthStr;
-	private String[] yearStr;
-	private int temp;
+	public JButton[] imgBtn;
+	public JLabel[] room_NumL;
+	public JLabel[] priceL;
+	public JLabel[] reservationL;
+	public ImageIcon[] image;
+	public JComboBox<String> yearCB;
+	public JComboBox<String> monthCB;
+	public JComboBox<String> dayCB;
+	public RoundedButton memberInfo;
+	public RoundedButton chat;
+	public JLabel main;
+	public Socket socket;
+	public BufferedReader br;
+	public PrintWriter pw;
+	public String loginId;
+	public String name;
+	public String tel;
+	public ArrayList<String> yearList;
+	public ArrayList<String> monthList;
+	public ArrayList<String> dayList;
+	public String[] dayStr;
+	public String[] monthStr;
+	public String[] yearStr;
+	public ChatClient cc;
+	public int temp;
+	public RoomChoiceController roomChoiceContreller;
 
 	public RoomChoice(String loginId, String name, String tel)
 	{
 		this.loginId = loginId;
 		this.name = name;
 		this.tel = tel;
+		roomChoiceContreller = new RoomChoiceController(this);
+		
+	    ImageIcon img = new ImageIcon("img/hotel_logo.png");
+	    this.setIconImage(img.getImage());
+	    
+	    this.setTitle("객실 예약");
 		
 		imgBtn = new JButton[NUMBER];
 		room_NumL = new JLabel[NUMBER];
@@ -85,7 +81,7 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		reservationL = new JLabel[NUMBER];
 		image = new ImageIcon[NUMBER];
 		
-		yearmonthday();
+		roomChoiceContreller.yearmonthday();
 		
 		yearCB = new JComboBox<String>(yearList.toArray(new String[yearList.size()]));
 		monthCB = new JComboBox<String>(monthList.toArray(new String[monthList.size()]));
@@ -102,11 +98,11 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		JPanel[] pText = new JPanel[NUMBER];
 		JPanel[] pLine = new JPanel[NUMBER];
 		
-		main = new JLabel("객실예약");
+		main = new JLabel("방 정보");
 		Font fontText = new Font("Times", Font.BOLD, 25);
 		main.setFont(fontText);
 		memberInfo = new RoundedButton("회원정보");
-		chat = new RoundedButton("예약현황");
+		chat = new RoundedButton("관리자문의");
 		
 		memberInfo.setBackground(Color.PINK);
 //		memberInfo.setForeground(Color.WHITE);
@@ -115,6 +111,7 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		
 		JPanel pL = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		pL.add(main);
+		
 		
 		JPanel pBtn1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		pBtn1.add(memberInfo);
@@ -128,6 +125,7 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		pDate.add(dayCB);
 		
 		JPanel pBtnTotal = new JPanel(new GridLayout(1, 2, 5, 5));
+		
 		pBtnTotal.add(pBtn1);
 		pBtnTotal.add(pL);
 		pBtnTotal.add(pBtn2);
@@ -136,7 +134,25 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		pBtnDate.add(pBtnTotal);
 		pBtnDate.add(pDate);
 		
-		JPanel pTotal = new JPanel(new GridLayout(9, 1, 5, 5));
+		
+		//JPanel pTotal = new JPanel(new GridLayout(9, 1, 5, 5));
+		//배경이미지 바꾸기
+	    ImageIcon backImg = new ImageIcon("img/back2.jpg");
+	      //배경 Panel 생성후 컨텐츠페인으로 지정      
+	      JPanel pTotal = new JPanel(new GridLayout(9, 1, 5, 5)) {
+	          public void paintComponent(Graphics g) {
+	              // Approach 1: Dispaly image at at full size
+	              g.drawImage(backImg.getImage(), 0, 0, null);
+	              // Approach 2: Scale image to size of component
+	               Dimension d = getSize();
+	               g.drawImage(backImg.getImage(), 0, 0, d.width, d.height, null);
+	              // Approach 3: Fix the image position in the scroll pane
+	              // Point p = scrollPane.getViewport().getViewPosition();
+	              // g.drawImage(icon.getImage(), p.x, p.y, null);
+	              setOpaque(false); //그림을 표시하게 설정,투명하게 조절
+	              super.paintComponent(g);
+	          }
+	      };
 		
 		priceL[0] = new JLabel("40000");
 		priceL[1] = new JLabel("40000");
@@ -149,7 +165,19 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		
 		for(int i = 0; i < NUMBER; i++)
 		{
-			image[i] = new ImageIcon("img/" + (i + 1) + ".png");
+			//ImageIcon객체를 생성
+			image[i] = new ImageIcon("img/" + (i + 1) + ".jpg");
+		
+			//ImageIcon에서 Image를 추출
+			Image originImg = image[i].getImage(); 
+			
+			//추출된 Image의 크기를 조절하여 새로운 Image객체 생성
+			Image changedImg= originImg.getScaledInstance(200, 80, Image.SCALE_SMOOTH );
+			
+			//새로운 Image로 ImageIcon객체를 생성
+			image[i] = new ImageIcon(changedImg);
+
+
 			
 			imgBtn[i] = new JButton(image[i]);
 			imgBtn[i].setBorderPainted(false); // 외곽선 없애기
@@ -185,7 +213,7 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		}
 		ArrayList<ReservationDTO> dayList = new ArrayList<ReservationDTO>();
 		ReservationDAO dao = new ReservationDAO();
-		SimpleDateFormat todayFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+		SimpleDateFormat todayFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date time = new Date();
 		
 		String todayTime = todayFormat.format(time);
@@ -196,7 +224,7 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 			
 			for(ReservationDTO dto : dayList)
 			{
-				SimpleDateFormat input2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
+				SimpleDateFormat input2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				
 				Date today = null;
 				Date start = null;
@@ -218,6 +246,7 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 					room_NumL[i].setEnabled(false);
 					priceL[i].setEnabled(false);
 					reservationL[i].setText("예약완료");
+					
 					reservationL[i].setEnabled(false);		
 				}
 			}
@@ -233,11 +262,14 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 		
 		c.add(scroll);
 
-		setBounds(100, 80, 400, 600);
+		setBounds(100, 80, 500, 950);
+		//setBounds(100, 80, 400, 600);
+		setLocationRelativeTo(null);
 		setVisible(true);
 		
 		event();
-		service();
+		roomChoiceContreller.service();
+		
 		
 		this.addWindowListener(new WindowAdapter()
 		{
@@ -248,242 +280,22 @@ public class RoomChoice extends JFrame implements ActionListener, Runnable
 				pw.flush();
 			}
 		});
+		
+		
 	}
 
 	public void event()
 	{
-		chat.addActionListener(this);
-		memberInfo.addActionListener(this);
-		yearCB.addActionListener(this);
-		monthCB.addActionListener(this);
-		dayCB.addActionListener(this);
+		chat.addActionListener(roomChoiceContreller);
+		memberInfo.addActionListener(roomChoiceContreller);
+		yearCB.addActionListener(roomChoiceContreller);
+		monthCB.addActionListener(roomChoiceContreller);
+		dayCB.addActionListener(roomChoiceContreller);
 		
 		for(int i = 0; i < NUMBER; i++)
 		{
-			imgBtn[i].addActionListener(this);
+			imgBtn[i].addActionListener(roomChoiceContreller);
 		}
-	}
-	public int calc(int year, int month)
-	{
-		Calendar cal = Calendar.getInstance();
-		cal.set(year, month - 1, 1);
-		int lastD = cal.getActualMaximum(Calendar.DATE);
-		return lastD;
-	}
-	public void yearmonthday()
-	{
-		Calendar oCalendar = Calendar.getInstance(); // 현재 날짜/시간 등의 각종 정보 얻기
-		// 현재 날짜
-		int toyear = oCalendar.get(Calendar.YEAR); 
-		int tomonth = oCalendar.get(Calendar.MONTH) + 1;
-		int today = oCalendar.get(Calendar.DAY_OF_MONTH);
-		// 년도
-		yearList = new ArrayList<String>();
-		monthList = new ArrayList<String>();
-		dayList = new ArrayList<String>();
-		for (int i = toyear; i <= toyear + 5; i++) {
-			yearList.add(String.valueOf(i));
-		}
-		for (int i = tomonth; i <= 12; i++) {
-			monthList.add(String.valueOf(i));
-		}
-		for (int i = today; i <= calc(toyear, tomonth); i++) {
-			dayList.add(String.valueOf(i));
-		}
-		
-		monthStr = monthList.toArray(new String[monthList.size()]);
-		dayStr = dayList.toArray(new String[dayList.size()]);
 	}
 	
-	public void service()
-	{
-		String serverIP = "192.168.0.69";
-		
-		try
-		{
-			throw new UnknownHostException();
-
-			socket = new Socket(serverIP, 9200);
-			br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			pw = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-		} 
-		catch (UnknownHostException e) 
-		{
-			System.out.println("서버를 찾을 수 없습니다");
-			e.printStackTrace();
-			System.exit(0);
-		} 
-		catch (IOException e) 
-		{
-			System.out.println("서버를 연결이 안되었습니다");
-			e.printStackTrace();
-			System.exit(0);
-		}
-		
-		Thread t = new Thread(this);
-		t.start();
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e)
-	{
-		
-		if(e.getSource() == memberInfo)
-		{
-			new Information(loginId, name, tel);
-			dispose();
-		}
-		else if (e.getSource() == monthCB )
-		{
-			Calendar oCalendar = Calendar.getInstance();
-			int toyear = oCalendar.get(Calendar.YEAR);
-			int tomonth = oCalendar.get(Calendar.MONTH) + 1;
-			String m = monthCB.getSelectedItem().toString();
-			String y = yearCB.getSelectedItem().toString();
-			dayList = new ArrayList<String>();
-			int last = calc(Integer.parseInt(y),Integer.parseInt(m));
-			
-			for (int i = 1; i <= last ; i++) 
-			{
-				dayList.add(String.valueOf(i));
-				System.out.println(String.valueOf(i));
-			}
-			dayStr = dayList.toArray(new String[dayList.size()]);
-			
-			if(m.equals(String.valueOf(tomonth)) && y.equals(String.valueOf(toyear))) 
-			{ //현재 날짜
-				yearmonthday();
-			}
-			dayCB.setModel(new DefaultComboBoxModel<String>(dayStr));
-		} 
-		else if (e.getSource() == yearCB)
-		{ //
-			String y = yearCB.getSelectedItem().toString();
-			Calendar oCalendar = Calendar.getInstance();
-			int toyear = oCalendar.get(Calendar.YEAR);
-			monthList = new ArrayList<String>();
-
-			if (toyear != Integer.parseInt(y))
-			{//현재년도와 선택년도 다르면
-				for (int i = 1; i <= 12; i++) 
-				{
-					monthList.add(String.valueOf(i));
-				}
-				monthStr = monthList.toArray(new String[monthList.size()]);
-			}
-			else
-				yearmonthday();
-			monthCB.setModel(new DefaultComboBoxModel<String>(monthStr));
-		}
-		else if(e.getSource() == dayCB)
-		{
-			for(int i = 0; i < NUMBER; i++)
-			{
-				imgBtn[i].setEnabled(true);
-				room_NumL[i].setEnabled(true);
-				priceL[i].setEnabled(true);
-				reservationL[i].setText("예약가능");
-				reservationL[i].setEnabled(true);	
-			}
-			int year = Integer.parseInt(yearCB.getSelectedItem().toString());
-			int month = Integer.parseInt(monthCB.getSelectedItem().toString());
-			int day = Integer.parseInt(dayCB.getSelectedItem().toString());
-			
-			ArrayList<ReservationDTO> dayList = new ArrayList<ReservationDTO>();
-			ReservationDAO dao = new ReservationDAO();
-			DateTimeFormatter todayFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.s");
-			LocalDateTime date = LocalDateTime.of(year, month, day, 00, 00, 00);
-			
-			String todayTime = todayFormat.format(date);
-			
-			for(int i = 0; i < NUMBER; i++)
-			{
-				dayList = dao.daycheak(room_NumL[i].getText());
-				
-				for(ReservationDTO dto : dayList)
-				{
-					SimpleDateFormat input2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.s");
-					
-					Date today = null;
-					Date start = null;
-					Date end = null;
-					
-					try {
-						today = input2.parse(todayTime);
-						start = input2.parse(dto.getStartday());
-						end = input2.parse(dto.getEndday());
-					} 
-					catch (ParseException e2)
-					{
-						e2.printStackTrace();
-					}
-					int compare1 = today.compareTo(start);
-					int compare2 = today.compareTo(end);
-					
-					if(compare1 == 1 && compare2 == -1 || compare1 == 0)
-					{
-						imgBtn[i].setEnabled(false);
-						room_NumL[i].setEnabled(false);
-						priceL[i].setEnabled(false);
-						reservationL[i].setText("예약완료");
-						reservationL[i].setEnabled(false);		
-					}
-				}
-			}
-		}
-		
-		String room = null;
-		for(int i = 0; i < NUMBER; i++)
-		{
-			if(e.getSource() == imgBtn[i])
-			{
-				room = room_NumL[i].getText();
-				
-				pw.println(room);
-				pw.flush();
-				
-				new RoomReservation(loginId, name, tel, room, priceL[i].getText(), yearCB.getSelectedItem().toString(), monthCB.getSelectedItem().toString(), dayCB.getSelectedItem().toString());
-				dispose();
-			}
-		}
-	}
-	@Override
-	public void run()
-	{
-		String room = null;
-		
-		while(true)
-		{
-			try 
-			{
-				room = br.readLine();
-
-				if(room == null || room.toLowerCase().equals("exit"))
-				{
-					br.close();
-					pw.close();
-					socket.close();
-					
-					System.exit(0);
-					break;
-				}
-				
-				for(int i = 0; i < NUMBER; i++)
-				{
-					if(room_NumL[i].getText().equals(room))
-					{
-						imgBtn[i].setEnabled(false);
-						room_NumL[i].setEnabled(false);
-						priceL[i].setEnabled(false);
-						reservationL[i].setText("예약완료");
-						reservationL[i].setEnabled(false);
-					}
-				}
-			} 
-			catch (IOException e) 
-			{
-				e.printStackTrace();
-			}
-		}
-	}
 }

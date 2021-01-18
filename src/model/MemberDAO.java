@@ -10,10 +10,14 @@ import java.util.ArrayList;
 public class MemberDAO {
 	private static MemberDAO instance;
 	
+//	private String driver = "com.mysql.cj.jdbc.Driver";
+//	private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
+//	private String user = "root";
+//	private String password = "0000";
 	private String driver = "com.mysql.cj.jdbc.Driver";
 	private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
 	private String user = "root";
-	private String password = "0000";
+	private String password = "0000"; 
 	
 	private Connection conn;
 	private PreparedStatement pstmt;

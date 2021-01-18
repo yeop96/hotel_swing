@@ -6,12 +6,17 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk-14.0.1/lib/mysql-connector-java-8.0.20.jar">
+	<classpathentry kind="lib" path="C:/Users/User/Desktop/세종대 강의/2020_겨울계절/객체지향설계기술/hotel_swing/lib/activation.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Program Files/Java/jdk-14.0.1/lib/mail.jar">
+	<classpathentry kind="lib" path="C:/Users/User/Desktop/세종대 강의/2020_겨울계절/객체지향설계기술/hotel_swing/lib/mail.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/User/Desktop/세종대 강의/2020_겨울계절/객체지향설계기술/hotel_swing/lib/mysql-connector-java-8.0.22.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>

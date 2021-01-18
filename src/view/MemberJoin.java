@@ -1,14 +1,13 @@
 package view;
 
 import java.awt.Color;
-
-
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -19,7 +18,6 @@ import javax.swing.JTextField;
 import controller.SendMail;
 import model.MemberDAO;
 import model.MemberDTO;
-import view.RoundedButton;
 
 public class MemberJoin extends JFrame implements ActionListener {
 	private JLabel idL, pwL, pwCheckL, nameL, birthL, emailL, emailCL, telL, addressL, telLineL, isSamePwL;
@@ -123,6 +121,12 @@ public class MemberJoin extends JFrame implements ActionListener {
 		con.add(emailCL);
 		con.add(emailCT);
 
+		ImageIcon img = new ImageIcon("img/hotel_logo.png");
+	    this.setIconImage(img.getImage());
+	    
+	    this.setTitle("회원 가입");
+	    setLocationRelativeTo(null);
+	    
 		setBounds(100, 100, 600, 500);
 		setVisible(true);
 		setResizable(false);

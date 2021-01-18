@@ -4,8 +4,6 @@ public class ReservationDTO {
 	private String id;
 	private String startday;
 	private String endday;
-	//private String name;
-	//private String phone;
 	private String roomNum;
 	private String adult;
 	private String child;
@@ -13,7 +11,7 @@ public class ReservationDTO {
 	private int pay; //방의 가격
 	private int salepay; //할인 가격 0
 	private int totalpay;
-	private String payway;//1-현금결제 2-계좌간편이체 3-신용체크카드 4-토스 5-네이버페이
+	private String payway;
 	
 	//setter 
 	
@@ -33,12 +31,7 @@ public class ReservationDTO {
 	public void setEndday(String endday) {
 		this.endday = endday;
 	}
-//	public void setName(String name) {
-//		this.name = name;
-//	}
-//	public void setPhone(String phone) {
-//		this.phone = phone;
-//	}
+
 	public void setRoomNum(String roomNum) {
 		this.roomNum = roomNum;
 	}
@@ -75,12 +68,7 @@ public class ReservationDTO {
 	public String getEndday() {
 		return endday;
 	}
-//	public String getName() {
-//		return name;
-//	}
-//	public String getPhone() {
-//		return phone;
-//	}
+
 	public String getRoomNum() {
 		return roomNum;
 	}

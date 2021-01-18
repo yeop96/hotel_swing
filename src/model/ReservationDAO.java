@@ -1,22 +1,24 @@
 package model;
 
 import java.sql.Connection;
-
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import model.MemberDTO;
-
 public class ReservationDAO {
 	private static ReservationDAO instance;
+	
+//	private String driver = "com.mysql.cj.jdbc.Driver";
+//	private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
+//	private String user = "root";
+//	private String password = "0000";
 	
 	private String driver = "com.mysql.cj.jdbc.Driver";
 	private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
 	private String user = "root";
-	private String password = "0000";
+	private String password = "0000"; 
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
@@ -123,6 +125,7 @@ public class ReservationDAO {
 			while(rs.next()) {
 				ReservationDTO reservationdto = new ReservationDTO();
 				reservationdto.setStartday(rs.getString("startday"));
+				
 				reservationdto.setEndday(rs.getString("endday"));
 				daylist.add(reservationdto);
 			}
