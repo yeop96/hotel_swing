@@ -2,6 +2,8 @@ package view;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -12,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
@@ -53,13 +56,32 @@ public class MemberJoin extends JFrame implements ActionListener {
 		emailCT = new JTextField(5);
 
 		memberOK = new RoundedButton("가입하기");
-		memberOK.setBackground(Color.PINK);
+		memberOK.setBackground(Color.WHITE);
 		memberNO = new RoundedButton("가입취소");
-		memberNO.setBackground(Color.PINK);
+		memberNO.setBackground(Color.WHITE);
 		isSameB = new JButton("중복확인");
 		emailCB = new JButton("이메일 인증");
 
-		setLayout(null);
+		//배경이미지 바꾸기
+	    ImageIcon backImg = new ImageIcon("img/room.png");
+	      //배경 Panel 생성후 컨텐츠페인으로 지정      
+	      JPanel panel = new JPanel() {
+	          public void paintComponent(Graphics g) {
+	              // Approach 1: Dispaly image at at full size
+	              g.drawImage(backImg.getImage(), 0, 0, null);
+	              // Approach 2: Scale image to size of component
+	               Dimension d = getSize();
+	               g.drawImage(backImg.getImage(), 0, 0, d.width, d.height, null);
+	              // Approach 3: Fix the image position in the scroll pane
+	              // Point p = scrollPane.getViewport().getViewPosition();
+	              // g.drawImage(icon.getImage(), p.x, p.y, null);
+	              setOpaque(false); //그림을 표시하게 설정,투명하게 조절
+	              super.paintComponent(g);
+	          }
+	      };
+	    panel.setLayout(null);
+	    //setLayout(null);
+	    
 		idL.setBounds(150, 55, 70, 10);
 		idT.setBounds(250, 50, 150, 20);
 		isSameB.setBounds(410, 50, 90, 20);
@@ -92,42 +114,45 @@ public class MemberJoin extends JFrame implements ActionListener {
 		addressL.setBounds(150, 375, 60, 10);
 		address1T.setBounds(250, 370, 300, 20);
 
-		memberOK.setBounds(200, 410, 100, 30);
-		memberNO.setBounds(320, 410, 100, 30);
+		memberOK.setBounds(250, 410, 100, 30);
+		memberNO.setBounds(370, 410, 100, 30);
 
 		Container con = getContentPane();
-		con.add(idL);
-		con.add(idT);
-		con.add(isSameB);
-		con.add(pwL);
-		con.add(pwT);
-		con.add(pwCheckL);
-		con.add(pwCheckT);
-		con.add(isSamePwL);
-		con.add(nameL);
-		con.add(nameT);
-		con.add(birthL);
-		con.add(birthT);
-		con.add(emailL);
-		con.add(emailT);
-		con.add(telL);
-		con.add(telT);
-		con.add(telLineL);
-		con.add(addressL);
-		con.add(address1T);
-		con.add(memberOK);
-		con.add(memberNO);
-		con.add(emailCB);
-		con.add(emailCL);
-		con.add(emailCT);
-
+		
+		
+		panel.add(idL);
+		panel.add(idT);
+		panel.add(isSameB);
+		panel.add(pwL);
+		panel.add(pwT);
+		panel.add(pwCheckL);
+		panel.add(pwCheckT);
+		panel.add(isSamePwL);
+		panel.add(nameL);
+		panel.add(nameT);
+		panel.add(birthL);
+		panel.add(birthT);
+		panel.add(emailL);
+		panel.add(emailT);
+		panel.add(telL);
+		panel.add(telT);
+		panel.add(telLineL);
+		panel.add(addressL);
+		panel.add(address1T);
+		panel.add(memberOK);
+		panel.add(memberNO);
+		panel.add(emailCB);
+		panel.add(emailCL);
+		panel.add(emailCT);
+		
+		con.add(panel);
+		
 		ImageIcon img = new ImageIcon("img/hotel_logo.png");
 	    this.setIconImage(img.getImage());
-	    
 	    this.setTitle("회원 가입");
 	    setLocationRelativeTo(null);
 	    
-		setBounds(100, 100, 600, 500);
+		setBounds(100, 100, 700, 500);
 		setVisible(true);
 		setResizable(false);
 		setDefaultCloseOperation(HIDE_ON_CLOSE);

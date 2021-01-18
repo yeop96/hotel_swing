@@ -7,17 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import hotel_main.Constant;
+
 public class MemberDAO {
 	private static MemberDAO instance;
 	
-//	private String driver = "com.mysql.cj.jdbc.Driver";
-//	private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
-//	private String user = "root";
-//	private String password = "0000";
-	private String driver = "com.mysql.cj.jdbc.Driver";
-	private String url = "jdbc:mysql://localhost/javadb?serverTimezone=UTC";
-	private String user = "root";
-	private String password = "0000"; 
+    private String driver = Constant.driver;
+    private String url = Constant.url;
+    private String user = Constant.user;
+    private String password = Constant.password; 
+	
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
