@@ -30,23 +30,36 @@
 ### 화면
 
 - 로그인
+
 ![image](https://user-images.githubusercontent.com/48886490/104949137-cd412d80-5a01-11eb-9a2a-5b17f3452580.png)
 
+
 - 회원가입
+
 ![image](https://user-images.githubusercontent.com/48886490/104949177-de8a3a00-5a01-11eb-91c8-c9d9863b2087.png)
 
+
 - 방 정보
+
 ![image](https://user-images.githubusercontent.com/48886490/104949257-04174380-5a02-11eb-87b7-b91138a21cbb.png)
 
+
 - 예약
+
 ![image](https://user-images.githubusercontent.com/48886490/104949299-14c7b980-5a02-11eb-9006-05915e3edbe6.png)
 
+
 - 마이 페이지
+
 ![image](https://user-images.githubusercontent.com/48886490/104949358-2c9f3d80-5a02-11eb-95dc-e7e55e85dcb6.png)
 ![image](https://user-images.githubusercontent.com/48886490/104949366-30cb5b00-5a02-11eb-86a2-28019902abb9.png)
 
+
 - 관리자
+
 ![image](https://user-images.githubusercontent.com/48886490/104949395-3cb71d00-5a02-11eb-8683-0ef5dca0e6d5.png)
 
+
 - 채팅
+
 ![image](https://user-images.githubusercontent.com/48886490/104949424-46408500-5a02-11eb-825b-68d8caa293e5.png)
